@@ -71,13 +71,13 @@ class Calendar
          });
          myImg.src = 'img/poubelle-gris.png';
 
-        document.getElementById('Retour').addEventListener("click", function(){
+        /*document.getElementById('Retour').addEventListener("click", function(){
             console.log(this);
             document.getElementById('details').style.display = 'none';
             document.getElementById('calendar').style.display = 'block';
             document.getElementsByClassName('btn-back')[0].style.display = 'none';
             document.getElementsByClassName('btn-history')[0].style.display = 'block';
-        });
+        });*/
     }
 
     loadMonth(date)
@@ -229,10 +229,11 @@ class Calendar
                         document.getElementById('details_dynamic').appendChild(poubelle_container);
                     });
 
-                    document.getElementById('calendar').style.display = 'none';
+                    /*document.getElementById('calendar').style.display = 'none';
                     document.getElementsByClassName('btn-history')[0].style.display = 'none';
                     document.getElementById('details').style.display = 'block';
-                    document.getElementsByClassName('btn-back')[0].style.display = 'block';
+                    document.getElementsByClassName('btn-back')[0].style.display = 'block';*/
+                    showContainer('details');
                 }
             });
 
