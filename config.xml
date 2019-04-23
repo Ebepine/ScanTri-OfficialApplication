@@ -26,6 +26,7 @@
     <preference name="orientation" value="portrait" />
     <icon src="res/icon/icon.png" />
     <plugin name="cordova-plugin-geolocation" spec="^4.0.1" />
+    <plugin name="cordova-plugin-barcodescanner" spec="^0.7.4" />
     <engine name="android" spec="^7.1.4" />
     <engine name="browser" spec="^5.0.4" />
 </widget>

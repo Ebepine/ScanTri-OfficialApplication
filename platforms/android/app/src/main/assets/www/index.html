@@ -40,10 +40,10 @@
   <nav class="navbar fixed-top">
     <div class="container-fluid">
         <div class="row">
-          <div class="col-3 text-left btn-back" style="padding-top: 5px;"><i class="fas fa-chevron-left app-icon" id="Retour"></i></div>
-          <div class="col-3 text-left btn-history" style="padding-top: 5px;"><i class="fas fa-history app-icon"></i></div>
+          <div class="col-3 text-left btn-back" style="padding-top: 5px;"><i class="fas fa-chevron-left app-icon"></i></div>
+          <div class="col-3 text-left btn-history" onclick="showContainer('history');" style="padding-top: 5px;"><i class="fas fa-history app-icon"></i></div>
           <div class="col-6 text-center"><img class="img-fluid" src="img/logo2.png" /></div>
-          <div class="col-3 text-right" style="padding-top: 5px;"><i class="fas fa-cogs app-icon"></i></div>
+          <div class="col-3 text-right" onclick="showContainer('options');" style="padding-top: 5px;"><i class="fas fa-cogs app-icon"></i></div>
         </div>
     </div>
   </nav>
@@ -51,31 +51,44 @@
   <!-- Contenu -->
   <div class="container-fluid content-container">
     <!-- Calendrier -->
-    <div class="calendar-container">
+    <div class="calendar-container content-container-hidden">
       <div id="calendar" class="calendar"></div>
-      <!-- détails des poubelles -->
-      <div id="details">
-        <div id="details_dynamic"></div>
-      </div>
+    </div>
+
+    <!-- Détail d'un jour du calendrier -->
+    <div class="details-container content-container-hidden">
+      <div id="details_dynamic"></div>
     </div>
 
     <!-- Carte -->
-    <div class="map-container">
+    <div class="map-container content-container-hidden">
       <div id="mapid"></div>
       <div id="map" class="leaflet-container leaflet-safari leaflet-fade-anim leaflet-grab leaflet-touch-drag" tabindex="0" style="position: relative; outline: none;"></div>
     </div>
+
+    <!-- Historique -->
+    <div class="history-container content-container-hidden"><h1>Historique</h1></div>
+
+    <!-- Résultat du scan -->
+    <div class="scan-infos-container content-container-hidden"><h1>Résultat du scan</h1></div>
+
+    <!-- Paramètres -->
+    <div class="options-container content-container-hidden"><h1>Paramètres</h1></div>
   </div>
 
   <!-- Footer -->
   <nav class="navbar fixed-bottom">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-4 text-center"><i onclick="showContainer('calendar');" class="fas fa-calendar-alt app-icon"></i></div>
-        <div class="col-4 text-center" style="padding: 0;"><div class="app-icon-important"><img class="img-fluid " src="img/barcode.png" /></div></div>
-        <div class="col-4 text-center"><i onclick="showContainer('map');" class="fas fa-map-marked-alt app-icon"></i></div>
+        <div class="col-4 text-center" onclick="showContainer('calendar');"><i class="fas fa-calendar-alt app-icon"></i></div>
+        <div class="col-4 text-center btn-scan-now" style="padding: 0;"><div class="app-icon-important"><img class="img-fluid " src="img/barcode.png" /></div></div>
+        <div class="col-4 text-center" onclick="showContainer('map');"><i class="fas fa-map-marked-alt app-icon"></i></div>
       </div>
     </div>
   </nav>
+
+  <!-- Cordova -->
+  <script src="cordova.js"></script>
 
   <!-- Bootstrap JavaScript -->
   <script src="vendor/jquery/jquery.min.js"></script>
@@ -91,7 +104,7 @@
   <!-- Javascript map -->
   <script src="./plugins/leaflet/leaflet.js" ></script>
   <script>
-
+    // À mettre dans un fichier séparé
     var map = L.map('map').fitWorld();
 
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
@@ -136,20 +149,66 @@
     }
     locateMe();
 
+    // À mettre dans un fichier séparé
+    $('.btn-scan-now').click(function(){
+      cordova.plugins.barcodeScanner.scan(
+        function (result) {
+          // Was it cancelled ?
+          if(result.cancelled == false) {
+            // Get product informations from OpenFoodFacts API
+            var apiURL = 'https://fr.openfoodfacts.org/api/v0/produit/' + result.text + '.json'
+            alert(apiURL);
+
+            // Call API
+            $.get(apiURL, function(data) {
+              // Produit trouvé
+              if(data.status == 1) {
+                alert('Trouvé');
+                alert(data);
+              }
+
+              // Produit non trouvé
+              else {
+                alert('Non trouvé');
+                alert(data);
+              }
+            });
+
+            showContainer('scan-infos');
+          }
+        },
+        function (error) {
+          alert('Une erreur est survenue : ' + error);
+        }
+      );
+    });
+
+    // À mettre dans un fichier séparé
+
     // Navigation
     var fadeDuration = 200; // ms
 
-    function showContainer(container_name)
+    $('.btn-back').click(function() {
+      showContainer($(this).data('back-container'));
+    });
+
+    function showContainer(container_name) { showBlock(container_name + '-container'); }
+
+    function showBlock(block_name)
     {
-      if($('.' + container_name + '-container:visible').length > 0) return;
-      
-      $('.calendar-container').fadeOut(fadeDuration / 2);
-      $('.map-container').fadeOut(fadeDuration / 2, function() {
-        $('.' + container_name + '-container').fadeIn(fadeDuration / 2, function() {
+      if($('.' + block_name + ':visible').length > 0) return;
+
+      // Tous nos conteneurs à cacher
+      $('.content-container-hidden').fadeOut(fadeDuration / 2, function() {
+        $('.' + block_name).fadeIn(fadeDuration / 2, function() {
+          // Fix pour l'affichage de la carte
           map.invalidateSize();
         });
       });
     }
+
+    // Affichage de la vue par défaut
+    showContainer('calendar');
 
     // Bouton retour physique
     document.addEventListener("backbutton", function() {

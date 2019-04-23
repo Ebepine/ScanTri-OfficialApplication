@@ -28,3 +28,11 @@
     margin: -10px -32px;
     height: 100vh;
 }
+
+.map-container #map {
+    position: absolute !important;
+    width: 100vw;
+    height: calc(100vh - 120px);
+    left: 0;
+    top: 60px;
+}

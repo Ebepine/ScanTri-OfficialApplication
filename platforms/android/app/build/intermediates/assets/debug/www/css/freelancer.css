@@ -445,7 +445,7 @@ a:focus, a:hover, a:active {
   color: #111;
 }
 
-.map-container {
+.content-container-hidden {
   display: none;
 }
 
