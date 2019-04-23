@@ -75,6 +75,8 @@ class Calendar
             console.log(this);
             document.getElementById('details').style.display = 'none';
             document.getElementById('calendar').style.display = 'block';
+            document.getElementsByClassName('btn-back')[0].style.display = 'none';
+            document.getElementsByClassName('btn-history')[0].style.display = 'block';
         });
     }
 
@@ -128,7 +130,7 @@ class Calendar
             'non_recyclables': {
                 'name': 'Déchets non recyclables',
                 'bin' : 'Grise',
-                'background': '#666',
+                'background': '#616161',
                 'color': '#FFFFFF',
                 'image': 'img/poubelle-gris.png',
                 'description': 'Déchets non recyclables',
@@ -227,8 +229,10 @@ class Calendar
                         document.getElementById('details_dynamic').appendChild(poubelle_container);
                     });
 
-                    document.getElementById('details').style.display = 'block';
                     document.getElementById('calendar').style.display = 'none';
+                    document.getElementsByClassName('btn-history')[0].style.display = 'none';
+                    document.getElementById('details').style.display = 'block';
+                    document.getElementsByClassName('btn-back')[0].style.display = 'block';
                 }
             });
 

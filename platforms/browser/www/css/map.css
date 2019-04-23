@@ -1,0 +1,30 @@
+#map { left: 5%; height: 80%; width: 90%; }
+
+.mylocation {
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    transform: translate(-50%, 10%);
+    -webkit-border-radius: 7px;
+    -moz-border-radius: 7px;
+    border-radius: 7px;
+    font-family: Arial;
+    color: #1f628d;
+    font-size: 30px;
+    background: #ffffff;
+    padding: 10px 20px 10px 20px;
+    border: solid #1f628d 2px;
+    text-decoration: none;
+}
+
+.mylocation:hover {
+    background: #1f628d;
+    text-decoration: none;
+    color: #ffffff;
+    border: none;
+}
+
+.map-container {
+    margin: -10px -32px;
+    height: 100vh;
+}

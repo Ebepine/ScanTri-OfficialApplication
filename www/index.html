@@ -1,28 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
+  <head>
 
-  <meta charset="utf-8">
+    <meta charset="utf-8">
 
-  <title>ScanneLe, La solution verte pour tous !</title>
+    <title>ScanneLe, La solution verte pour tous !</title>
 
-  <!-- Bootstrap CSS -->
-  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- ??? (map)-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
-  <!-- template -->
-  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
-  <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <!-- Bootstrap CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
-  <!-- Plugin CSS -->
-  <link href="vendor/magnific-popup/magnific-popup.css" rel="stylesheet" type="text/css">
+    <!-- template -->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
 
-  <!--CSS Calendar-->
-  <link rel="stylesheet" type="text/css" href="./css/Calendar.css">
+    <!-- Plugin CSS -->
+    <link href="vendor/magnific-popup/magnific-popup.css" rel="stylesheet" type="text/css">
 
-  <!-- CSS template -->
-  <link href="css/freelancer.css" rel="stylesheet">
+    <!--CSS Calendar-->
+    <link rel="stylesheet" type="text/css" href="./css/Calendar.css">
+
+    <!--CSS map-->
+    <link rel="stylesheet" href="./plugins/leaflet/leaflet.css" >
+    <link rel="stylesheet" type="text/css" href="./css/map.css">
+
+    <!-- CSS template -->
+    <link href="css/freelancer.css" rel="stylesheet">
 
 
 </head>
@@ -33,23 +40,29 @@
   <nav class="navbar fixed-top">
     <div class="container-fluid">
         <div class="row">
-          <div class="col-3 text-left" style="padding-top: 5px;"><i class="fas fa-user app-icon"></i></div>
+          <div class="col-3 text-left btn-back" style="padding-top: 5px;"><i class="fas fa-chevron-left app-icon" id="Retour"></i></div>
+          <div class="col-3 text-left btn-history" style="padding-top: 5px;"><i class="fas fa-history app-icon"></i></div>
           <div class="col-6 text-center"><img class="img-fluid" src="img/logo2.png" /></div>
           <div class="col-3 text-right" style="padding-top: 5px;"><i class="fas fa-cogs app-icon"></i></div>
         </div>
     </div>
   </nav>
 
-
-  <!--Calendrier -->
+  <!-- Contenu -->
   <div class="container-fluid content-container">
+    <!-- Calendrier -->
     <div class="calendar-container">
       <div id="calendar" class="calendar"></div>
-
+      <!-- détails des poubelles -->
       <div id="details">
-        <button type="button" class="btn btn-light" id="Retour">retour</button>
         <div id="details_dynamic"></div>
       </div>
+    </div>
+
+    <!-- Carte -->
+    <div class="map-container">
+      <div id="mapid"></div>
+      <div id="map" class="leaflet-container leaflet-safari leaflet-fade-anim leaflet-grab leaflet-touch-drag" tabindex="0" style="position: relative; outline: none;"></div>
     </div>
   </div>
 
@@ -57,9 +70,9 @@
   <nav class="navbar fixed-bottom">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-4 text-center"><i class="fas fa-calendar-alt app-icon"></i></div>
+        <div class="col-4 text-center"><i onclick="showContainer('calendar');" class="fas fa-calendar-alt app-icon"></i></div>
         <div class="col-4 text-center" style="padding: 0;"><div class="app-icon-important"><img class="img-fluid " src="img/barcode.png" /></div></div>
-        <div class="col-4 text-center"><i class="fas fa-map-marked-alt app-icon"></i></div>
+        <div class="col-4 text-center"><i onclick="showContainer('map');" class="fas fa-map-marked-alt app-icon"></i></div>
       </div>
     </div>
   </nav>
@@ -75,8 +88,76 @@
   <!-- Javascript Calendar -->
   <script type="text/javascript" src="./js/Calendar.js"></script>
 
+  <!-- Javascript map -->
+  <script src="./plugins/leaflet/leaflet.js" ></script>
+  <script>
+
+    var map = L.map('map').fitWorld();
+
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+      maxZoom: 16,
+      attribution: '',
+      id: 'mapbox.streets'
+    }).addTo(map);
+
+    var markers = [];
+    var viewSet = false;
+
+    var onSuccess = function(position) {
+      var radius = Math.round(position.coords.accuracy / 2);
+      var latlng = new L.latLng(position.coords.latitude, position.coords.longitude);
+
+      // Delete old markers between drawing new ones
+      markers.forEach(function(marker){
+        map.removeLayer(marker);
+      });
+
+      // Draw new markers, setting zoom
+      markers.push(L.marker(latlng).addTo(map).bindPopup('Vous êtes ici').openPopup());
+      markers.push(L.circle(latlng, radius).addTo(map));
+
+      // Set view only once
+      if(!viewSet) {
+        map.setView(latlng, 16);
+        viewSet = true;
+      }
+
+      // Relocate after xxx ms
+      setTimeout(locateMe, 2000);
+    }
+
+    // onError Callback receives a PositionError object
+    function onError(error) {
+      alert('Une erreur est survenue durant la localisation.\nCode #' + error.code + ' (' + error.message + ')');
+    }
+
+    function locateMe() {
+      navigator.geolocation.getCurrentPosition(onSuccess, onError);
+    }
+    locateMe();
+
+    // Navigation
+    var fadeDuration = 200; // ms
+
+    function showContainer(container_name)
+    {
+      if($('.' + container_name + '-container:visible').length > 0) return;
+
+      $('.calendar-container').fadeOut(fadeDuration / 2);
+      $('.map-container').fadeOut(fadeDuration / 2, function() {
+        $('.' + container_name + '-container').fadeIn(fadeDuration / 2, function() {
+          map.invalidateSize();
+        });
+      });
+    }
+
+    // Bouton retour physique
+    document.addEventListener("backbutton", function() {
+      $('.btn-back:visible').find('i').click();
+    }, false);
+  </script>
   <!-- Javascript template -->
-  <script src="js/freelancer.min.js"></script>
+ <script src="js/freelancer.min.js"></script>
 
 </body>
 

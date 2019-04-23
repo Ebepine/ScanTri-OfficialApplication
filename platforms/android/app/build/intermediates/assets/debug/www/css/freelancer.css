@@ -6,6 +6,7 @@
 
 body {
   font-family: 'Lato';
+  overflow-x: hidden;
 }
 
 h1,
@@ -442,6 +443,14 @@ a:focus, a:hover, a:active {
 .navbar.fixed-bottom .app-icon
 {
   color: #111;
+}
+
+.map-container {
+  display: none;
+}
+
+.btn-back {
+  display: none;
 }
 
 /* Ugly patch */

@@ -48,12 +48,12 @@
         "source": "C:\\Users\\Biohazard\\WebstormProjects\\ScanTri-OfficialApplication\\platforms\\android\\app\\src\\main\\res\\drawable-port-xxhdpi\\screen.png"
     },
     {
-        "merged": "C:\\Users\\Biohazard\\WebstormProjects\\ScanTri-OfficialApplication\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-port-ldpi_screen.png.flat",
-        "source": "C:\\Users\\Biohazard\\WebstormProjects\\ScanTri-OfficialApplication\\platforms\\android\\app\\src\\main\\res\\drawable-port-ldpi\\screen.png"
-    },
-    {
         "merged": "C:\\Users\\Biohazard\\WebstormProjects\\ScanTri-OfficialApplication\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-ldpi_icon.png.flat",
         "source": "C:\\Users\\Biohazard\\WebstormProjects\\ScanTri-OfficialApplication\\platforms\\android\\app\\src\\main\\res\\mipmap-ldpi\\icon.png"
+    },
+    {
+        "merged": "C:\\Users\\Biohazard\\WebstormProjects\\ScanTri-OfficialApplication\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-port-ldpi_screen.png.flat",
+        "source": "C:\\Users\\Biohazard\\WebstormProjects\\ScanTri-OfficialApplication\\platforms\\android\\app\\src\\main\\res\\drawable-port-ldpi\\screen.png"
     },
     {
         "merged": "C:\\Users\\Biohazard\\WebstormProjects\\ScanTri-OfficialApplication\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi_icon.png.flat",
