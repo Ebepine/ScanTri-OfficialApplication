@@ -1,0 +1,159 @@
+/* poppins-regular - latin */
+@font-face {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/poppins-v6-latin-regular.eot'); /* IE9 Compat Modes */
+    src: local('Poppins Regular'), local('Poppins-Regular'),
+    url('../fonts/poppins-v6-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('../fonts/poppins-v6-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+    url('../fonts/poppins-v6-latin-regular.woff') format('woff'), /* Modern Browsers */
+    url('../fonts/poppins-v6-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+    url('../fonts/poppins-v6-latin-regular.svg#Poppins') format('svg'); /* Legacy iOS */
+}
+
+.calendar-container
+{
+    /*align-items:flex-start;*/
+    /*background:#22262b;*/
+
+    color:#0a0a0a;
+    display:flex;
+    font-family:'Poppins';
+    font-size:16px;
+    height:100vh;
+    justify-content:center;
+    margin:0;
+    padding:0;
+
+}
+
+.calendar
+{
+    background:#fff;
+    border-radius:4px;
+    color:#222629;
+    overflow:hidden;
+    /*margin-top:20px;
+    max-width:400px;*/
+}
+
+button
+{
+    border:none;
+}
+.box {
+    float: left;
+    width: 200px;
+    height: 100px;
+    margin: 1em;
+}
+.calendar .header
+{
+    /*background:#ddd;*/
+    height:40px;
+    line-height:40px;
+    text-align:center;
+}
+
+.calendar .month
+{
+    display:inline-block;
+    font-weight:bold;
+}
+
+.calendar button
+{
+    background:none;
+    color:inherit;
+    cursor:pointer;
+    font-family:Consolas;
+    font-size:23px;
+    font-weight:bold;
+    height:100%;
+    padding:0 15px;
+}
+
+.calendar button:hover
+{
+    color:#009FB7;
+}
+
+.calendar button:first-child
+{
+    float:left;
+}
+
+.calendar button:last-child
+{
+    float:right;
+}
+
+.calendar .cell
+{
+    /*border: 2px solid;
+    border-color: black;*/
+    background:#fff;
+    color:#5d5d5d;
+    box-sizing:border-box;
+    display:inline-block;
+    padding:10px 0;
+    text-align:center;
+    width:calc(100% / 7);
+    height: 90px;
+    text-align: center;
+    vertical-align: top;
+}
+
+.calendar .day
+{
+    font-size:.8rem;
+    padding:8px 0;
+    height: 20px;
+}
+
+/*.calendar .day, .calendar .today
+{
+    background:#009FB7;
+    color:#fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    margin-left: 5px;
+}*/
+.calendar .today
+{
+    background:#009FB7;
+    color:#fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    margin-left: 5px;
+}
+/*Affiche les boubelles */
+/*.marqueur_poubelle {
+    /*display: inline-block;*/
+   /* width: 15px;
+    height: 15px;
+    border-radius: 100%;
+    margin-left: 5px;
+    font-size: 50%;*/
+    /*vertical-align: bottom;*/
+/*}*/
+
+.marqueur_poubelle{
+    border-radius: 100%;
+    padding: 7px;
+    vertical-align: middle;
+
+
+}
+#details{
+    color: black;
+    max-width:400px;
+    display: none;
+    margin-top: 90px;
+}
+h1{
+    text-align: center;
+}
