@@ -1,3 +1,57 @@
+// @fixme : rendre le code plus propre, en le mettant dans une fonction à part (ou un objet ?)
+// Définir les différents types de ramassages
+let ramassages = {
+    'non_recyclables': {
+        'name': 'Déchets non recyclables',
+        'bin' : 'Grise',
+        'background': '#616161',
+        'color': '#FFFFFF',
+        'image': 'img/poubelle-gris.png',
+        'description': 'Déchets non recyclables',
+        'schedule_time': '8h - 12h'
+    },
+    'plastiques': {
+        'name': 'Déchets plastiques',
+        'bin' : 'Jaune',
+        'background': '#F9A825',
+        'color' : '#000000',
+        'image': 'img/poubelle-jaune-2.png',
+        'description': 'Déchets plastiques',
+        'schedule_time': '13h - 15h'
+    },
+    'verres': {
+        'name': 'Déchets en verre',
+        'bin' : 'Point d\'apport volontaire',
+        'background': '#388E3C',
+        'color' : '#000000',
+        'image': 'img/poubelle-vert.png',
+        'description': 'Déchets plastiques',
+        'schedule_time': '13h - 15h'
+    },
+    'metaux': {
+        'name': 'Metaux',
+        'bin' : 'Bleue',
+        'background': '#1976D2',
+        'color' : '#FFFFFF',
+        'image': 'img/poubelle-bleu-2.png',
+        'description': 'Déchets métalliques',
+        'schedule_time': '13h - 15h'
+    }
+};
+
+let jours_ramassages = {
+    0: [], // Dimanche
+    1: [ ramassages.non_recyclables, ramassages.plastiques ], // Lundi
+    2: [ ramassages.metaux ], // Mardi
+    3: [ ramassages.non_recyclables ], // Mercredi
+    4: [ ramassages.metaux ], // Jeudi
+    5: [ ramassages.plastiques ], // Vendredi
+    6: [], // Samedi
+    //6: [ ramassages.cartons ], // Samedi
+}
+
+// /@fixme
+
 class Calendar
 {
 
@@ -115,48 +169,6 @@ class Calendar
 
         // Nombre de jour dans le mois affiché
         let monthLength = new Date(date.getFullYear(), date.getMonth()+1, 0).getDate();
-
-        // @fixme : rendre le code plus propre, en le mettant dans une fonction à part (ou un objet ?)
-        // Définir les différents types de ramassages
-        let ramassages = {
-            'non_recyclables': {
-                'name': 'Déchets non recyclables',
-                'bin' : 'Grise',
-                'background': '#616161',
-                'color': '#FFFFFF',
-                'image': 'img/poubelle-gris.png',
-                'description': 'Déchets non recyclables',
-                'schedule_time': '8h - 12h'
-            },
-            'plastiques': {
-                'name': 'Déchets plastiques',
-                'bin' : 'Jaune',
-                'background': '#F9A825',
-                'color' : '#000000',
-                'image': 'img/poubelle-jaune-2.png',
-                'description': 'Déchets plastiques',
-                'schedule_time': '13h - 15h'
-            }/*,
-            'cartons': {
-                'name': 'Cartons',
-                'bin' : 'Bleue',
-                'background': '#00F',
-                'color' : #FFFFFF'
-            }*/
-        };
-
-        let jours_ramassages = {
-            0: [], // Dimanche
-            1: [ ramassages.non_recyclables, ramassages.plastiques ], // Lundi
-            2: [], // Mardi
-            3: [ ramassages.non_recyclables ], // Mercredi
-            4: [], // Jeudi
-            5: [ ramassages.plastiques ], // Vendredi
-            6: [], // Samedi
-           //6: [ ramassages.cartons ], // Samedi
-        }
-
-        // /@fixme
 
         // Création des cellules contenant les jours du mois affiché
         for(let i=1; i<=monthLength; i++)

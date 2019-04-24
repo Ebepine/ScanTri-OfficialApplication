@@ -30,9 +30,10 @@
 
     <!-- CSS template -->
     <link href="css/freelancer.css" rel="stylesheet">
+    <script src="../../../../Downloads/test/historyManager.js"></script>
 
 
-</head>
+  </head>
 
 <body id="page-top">
 
@@ -41,9 +42,9 @@
     <div class="container-fluid">
         <div class="row">
           <div class="col-3 text-left btn-back" style="padding-top: 5px;"><i class="fas fa-chevron-left app-icon"></i></div>
-          <div class="col-3 text-left btn-history" onclick="showContainer('history');" style="padding-top: 5px;"><i class="fas fa-history app-icon"></i></div>
+          <div class="col-3 text-left btn-history" onclick="fillHistory();showContainer('history');" style="padding-top: 5px;"><i class="fas fa-history app-icon"></i></div>
           <div class="col-6 text-center"><img class="img-fluid" src="img/logo2.png" /></div>
-          <div class="col-3 text-right" onclick="showContainer('options');" style="padding-top: 5px;"><i class="fas fa-cogs app-icon"></i></div>
+          <div class="col-3 text-right" style="padding-top: 5px;"><!--<i class="fas fa-cogs app-icon"></i>--></div>
         </div>
     </div>
   </nav>
@@ -67,10 +68,10 @@
     </div>
 
     <!-- Historique -->
-    <!--<div class="history-container content-container-hidden"><h1>Historique</h1></div>-->
+    <div class="history-container content-container-hidden"><h1>Historique</h1></div>
 
     <!-- Résultat du scan -->
-    <div id="scan-infos-container" class="content-container hidden"><h1></h1></div>
+    <div class="scan-infos-container content-container-hidden"><h1>Test</h1></div>
 
     <!-- Paramètres -->
     <!--<div class="options-container content-container-hidden"><h1>Paramètres</h1></div>-->
@@ -101,11 +102,15 @@
   <!-- Javascript Calendar -->
   <script type="text/javascript" src="./js/Calendar.js"></script>
 
+  <!-- Javascript Calendar -->
+  <script type="text/javascript" src="./js/historyManager.js"></script>
+
   <!-- Javascript map -->
+  <script type="text/javascript" src="js/map.js" ></script>
   <script src="./plugins/leaflet/leaflet.js" ></script>
   <script>
     // À mettre dans un fichier séparé
-    var map = L.map('map').fitWorld();
+   var map = L.map('map').fitWorld();
 
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
       maxZoom: 16,
@@ -165,51 +170,48 @@
       );
     });
 
-    function getDataFromBarcode(barcode) {
+    function getDataFromBarcode(barcode, append = true) {
       // Get product informations from OpenFoodFacts API
-      var apiURL = 'https://fr.openfoodfacts.org/api/v0/produit/' + barcode + '.json'
-      //alert('Appel de ' + apiURL);
+      var apiURL = 'https://fr.openfoodfacts.org/api/v0/produit/' + barcode + '.json';
 
       // Call API
       $.get(apiURL, function(data) {
         // Produit trouvé
         if(data.status == 1) {
-          $(".content-container").removeClass("hidden");
-          // Créer une div resultat_scan
-          var resultat_scan_container = document.createElement('div');
-          resultat_scan_container.classList.add('scan_resultat');
+          // Get trash from packaging
+          var trash = getTrashFromPackaging(data.product.packaging_tags);
+          var htmlTrash = '';
 
-          // Ajout d'un titre dans le conteneur
-          var resultat_scan_titre = document.createElement('h1');
-          resultat_scan_titre.classList.add('scan_titre');
-          resultat_scan_titre.innerHTML = data.product.product_name;
+          // If trash has been found
+          if(trash.found) {
+            htmlTrash = generateTrashHTML(trash.trash);
+          }
+          else if(!trash.found) {
+            htmlTrash = '<p style="text-align: justify;"><em>Désolé, la fiche produit ne semble pas contenir d\'informations sur le packaging. Vous pouvez l\'améliorer en vous rendant sur openfoodfacts.org.</em></p>';
+          }
 
-          // Ajout d'une image dans le conteneur
-          var resultat_scan_image = document.createElement('img');
-          resultat_scan_image.src = data.product.images.image_small_url;
-          resultat_scan_image.src = data.product.image_small_url;
+          // Add content into .scan-infos-container
+          $('.scan-infos-container').html(
+            '<h1 class="scan_title">' + data.product.product_name + '</h1>' +
+            '<img src="' + data.product.image_small_url + '" />' +
+            '<p>' + data.product.packaging_tags + '</p>' +
+            '<hr/>' + htmlTrash
+          );
 
-          // Ajout du matériel
-          var resultat_scan_materiel = document.createElement('p');
-          resultat_scan_materiel.innerHTML = data.product.packaging;
+          // Add value to the history
+          if(append) {
+            historyManager.append({'barCode': data.code, 'productName': data.product.product_name});
+          }
 
-          // Insertion des éléments dans notre conteneur
-          resultat_scan_container.appendChild(resultat_scan_titre);
-          resultat_scan_container .appendChild(resultat_scan_image);
-          resultat_scan_container .appendChild(resultat_scan_materiel);
-          // Insertion du conteneur dans la page
-          document.getElementById('scan-infos-container').appendChild(resultat_scan_container);
-          showContainer('scan-infos-container');
+          // Show the container
+          showContainer('scan-infos');
         }
 
         // Produit non trouvé
         else {
-          alert('Non trouvé');
-          alert(data);
+          alert('Aucun produit correspondant n\'a pu être trouvé.');
         }
       });
-
-      showContainer('scan-infos');
     }
 
     // À mettre dans un fichier séparé
@@ -243,6 +245,111 @@
     document.addEventListener("backbutton", function() {
       $('.btn-back:visible').find('i').click();
     }, false);
+
+    // À mettre dans un fichier séparé
+    function fillHistory() {
+      // Get our iterator (default parameter value set a limit of 10 elements)
+      var elements = historyManager.read(20);
+
+      // Generate an HTML list
+      var htmlList = '<ul class="bordered-list-clickable">';
+
+      // The loop will only stop when our iterator has finished
+      while(element = elements.next()) {
+        // If we have finished, stop
+        if(element.done) break;
+
+        // Otherwise, extract value from our element
+        element = element.value;
+
+        // Print our element inside the console
+        htmlList += '<li onclick="getDataFromBarcode(\'' + element.barCode + '\', false)">' + element.productName + '</li>';
+      }
+
+      htmlList += '</ul>';
+
+      // Append html to the history
+      $('.history-container').html(htmlList);
+    }
+
+    // À placer dans un fichier séparé
+    function getTrashFromPackaging(packaging) {
+      if(packaging.length < 1) {
+        // Produit incomplet
+        return {
+          found: false,
+          trash: null
+        };
+      }
+      else {
+        if(packaging.indexOf('conserve') != -1) {
+          // Conserve
+          return {
+            found: true,
+            trash: ramassages.metaux
+          };
+        }
+        else if(packaging.indexOf('verre') != -1) {
+          // Verre
+          return {
+            found: true,
+            trash: ramassages.verres
+          };
+        }
+        else if(packaging.indexOf('plastique') != -1) {
+          // Plastiques
+          return {
+            found: true,
+            trash: ramassages.plastiques
+          };
+        }
+        else {
+          // Inconnu
+          return {
+            found: true,
+            trash: ramassages.non_recyclables
+          };
+        }
+      }
+    }
+
+    function generateTrashHTML(trash) {
+      // Créer une div.poubelle
+      var poubelle_container = document.createElement('div');
+      poubelle_container.classList.add('poubelle');
+
+      // Ajout d'un titre dans le conteneur
+      var poubelle_container_titre = document.createElement('h1');
+      poubelle_container_titre.classList.add('poubelle_titre');
+      poubelle_container_titre.innerHTML = trash.name;
+
+      // Ajout d'une image dans le conteneur
+      var poubelle_container_image = document.createElement('img');
+      poubelle_container_image.src = trash.image;
+
+      // Ajout d'une description
+      var poubelle_container_description = document.createElement('p');
+      poubelle_container_description.innerHTML = trash.description;
+
+      // Ajout du label d'horaire
+      var poubelle_container_label_horaire = document.createElement('strong');
+      poubelle_container_label_horaire.innerHTML = 'Horaires';
+
+      // Ajout des horaires
+      var poubelle_container_horaire = document.createElement('p');
+      poubelle_container_horaire.classList.add('poubelle_horaires');
+      poubelle_container_horaire.innerHTML = trash.schedule_time;
+
+      // Insertion des éléments dans notre conteneur
+      poubelle_container.appendChild(poubelle_container_titre);
+      poubelle_container.appendChild(poubelle_container_image);
+      poubelle_container.appendChild(poubelle_container_description);
+      poubelle_container.appendChild(poubelle_container_label_horaire);
+      poubelle_container.appendChild(poubelle_container_horaire);
+
+      // On renvoie le code HTML
+      return poubelle_container.outerHTML;
+    }
   </script>
   <!-- Javascript template -->
  <script src="js/freelancer.min.js"></script>

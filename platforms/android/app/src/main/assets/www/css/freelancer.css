@@ -453,6 +453,18 @@ a:focus, a:hover, a:active {
   display: none;
 }
 
+ul.bordered-list-clickable {
+  margin: 0;
+  padding: 0;
+}
+
+ul.bordered-list-clickable li {
+  list-style: none;
+  padding: 10px 15px;
+  border-bottom: 1px solid #ddd;
+  font-size: 1.2em;
+}
+
 /* Ugly patch */
 .row {
   width: 100%!important;

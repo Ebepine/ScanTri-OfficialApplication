@@ -1,0 +1,32 @@
+[
+  {
+    "nom" : "Poubelle de verre",
+    "couleur" : "",
+    "contenu" : ["verre"],
+	"defaut" : "non"
+  },
+  {
+    "nom" : "Poubelle recyclable",
+    "couleur" : "Jaune",
+    "contenu" : ["conserve", "carton"],
+	"defaut" : "non"	
+  },
+  {
+    "nom" : "Poubelle ménagère",
+    "couleur" : "Rose",
+    "contenu" : ["plastique", "yaourt"],
+	"defaut" : "oui"
+  },
+  {
+    "nom" : "Poubelle bio",
+    "couleur" : "Verte",
+    "contenu" : ["alimentaire"],
+	"defaut" : "non"
+  },
+  {
+    "nom" : "Déchetterie",
+    "couleur" : "",
+    "contenu" : ["pile", "vetement"],
+	"defaut" : "non"
+  }
+]
