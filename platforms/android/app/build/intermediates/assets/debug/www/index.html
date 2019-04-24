@@ -67,13 +67,13 @@
     </div>
 
     <!-- Historique -->
-    <div class="history-container content-container-hidden"><h1>Historique</h1></div>
+    <!--<div class="history-container content-container-hidden"><h1>Historique</h1></div>-->
 
     <!-- Résultat du scan -->
-    <div class="scan-infos-container content-container-hidden"><h1>Résultat du scan</h1></div>
+    <div id="scan-infos-container" class="content-container hidden"><h1></h1></div>
 
     <!-- Paramètres -->
-    <div class="options-container content-container-hidden"><h1>Paramètres</h1></div>
+    <!--<div class="options-container content-container-hidden"><h1>Paramètres</h1></div>-->
   </div>
 
   <!-- Footer -->
@@ -168,15 +168,38 @@
     function getDataFromBarcode(barcode) {
       // Get product informations from OpenFoodFacts API
       var apiURL = 'https://fr.openfoodfacts.org/api/v0/produit/' + barcode + '.json'
-      alert('Appel de ' + apiURL);
+      //alert('Appel de ' + apiURL);
 
       // Call API
       $.get(apiURL, function(data) {
         // Produit trouvé
         if(data.status == 1) {
-          alert('Trouvé');
-          alert(data.product.product_name);
+          $(".content-container").removeClass("hidden");
+          // Créer une div resultat_scan
+          var resultat_scan_container = document.createElement('div');
+          resultat_scan_container.classList.add('scan_resultat');
 
+          // Ajout d'un titre dans le conteneur
+          var resultat_scan_titre = document.createElement('h1');
+          resultat_scan_titre.classList.add('scan_titre');
+          resultat_scan_titre.innerHTML = data.product.product_name;
+
+          // Ajout d'une image dans le conteneur
+          var resultat_scan_image = document.createElement('img');
+          resultat_scan_image.src = data.product.images.image_small_url;
+          resultat_scan_image.src = data.product.image_small_url;
+
+          // Ajout du matériel
+          var resultat_scan_materiel = document.createElement('p');
+          resultat_scan_materiel.innerHTML = data.product.packaging;
+
+          // Insertion des éléments dans notre conteneur
+          resultat_scan_container.appendChild(resultat_scan_titre);
+          resultat_scan_container .appendChild(resultat_scan_image);
+          resultat_scan_container .appendChild(resultat_scan_materiel);
+          // Insertion du conteneur dans la page
+          document.getElementById('scan-infos-container').appendChild(resultat_scan_container);
+          showContainer('scan-infos-container');
         }
 
         // Produit non trouvé

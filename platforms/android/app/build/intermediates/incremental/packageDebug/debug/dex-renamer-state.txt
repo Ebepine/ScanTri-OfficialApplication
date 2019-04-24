@@ -1,4 +1,4 @@
-#Wed Apr 24 00:53:33 CEST 2019
+#Wed Apr 24 11:05:32 CEST 2019
 base.0=C\:\\Users\\Marine\\Documents\\GitHub\\ScanTri-OfficialApplication\\platforms\\android\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0
 path.0=classes.dex
 renamed.0=classes.dex
