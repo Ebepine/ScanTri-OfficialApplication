@@ -155,26 +155,8 @@
         function (result) {
           // Was it cancelled ?
           if(result.cancelled == false) {
-            // Get product informations from OpenFoodFacts API
-            var apiURL = 'https://fr.openfoodfacts.org/api/v0/produit/' + result.text + '.json'
-            alert(apiURL);
-
-            // Call API
-            $.get(apiURL, function(data) {
-              // Produit trouvé
-              if(data.status == 1) {
-                alert('Trouvé');
-                alert(data);
-              }
-
-              // Produit non trouvé
-              else {
-                alert('Non trouvé');
-                alert(data);
-              }
-            });
-
-            showContainer('scan-infos');
+            // No
+            getDataFromBarcode(result.text);
           }
         },
         function (error) {
@@ -182,6 +164,30 @@
         }
       );
     });
+
+    function getDataFromBarcode(barcode) {
+      // Get product informations from OpenFoodFacts API
+      var apiURL = 'https://fr.openfoodfacts.org/api/v0/produit/' + barcode + '.json'
+      alert('Appel de ' + apiURL);
+
+      // Call API
+      $.get(apiURL, function(data) {
+        // Produit trouvé
+        if(data.status == 1) {
+          alert('Trouvé');
+          alert(data.product.product_name);
+
+        }
+
+        // Produit non trouvé
+        else {
+          alert('Non trouvé');
+          alert(data);
+        }
+      });
+
+      showContainer('scan-infos');
+    }
 
     // À mettre dans un fichier séparé
 
