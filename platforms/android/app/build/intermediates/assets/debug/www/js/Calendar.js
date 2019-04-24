@@ -7,7 +7,7 @@ let ramassages = {
         'background': '#616161',
         'color': '#FFFFFF',
         'image': 'img/poubelle-gris.png',
-        'description': 'Déchets non recyclables',
+        'description': 'Ensemble des déchets ne pouvant pas être recyclés.',
         'schedule_time': '8h - 12h'
     },
     'plastiques': {
@@ -16,7 +16,7 @@ let ramassages = {
         'background': '#F9A825',
         'color' : '#000000',
         'image': 'img/poubelle-jaune-2.png',
-        'description': 'Déchets plastiques',
+        'description': 'Déchets d\'origine plastiques (durs uniquement).',
         'schedule_time': '13h - 15h'
     },
     'verres': {
@@ -25,17 +25,17 @@ let ramassages = {
         'background': '#388E3C',
         'color' : '#000000',
         'image': 'img/poubelle-vert.png',
-        'description': 'Déchets plastiques',
-        'schedule_time': '13h - 15h'
+        'description': 'Déchets en verre (en bon état uniquement), à apporter au point d\'apport volontaire le plus proche.',
+        'schedule_time': '07h - 10h'
     },
     'metaux': {
-        'name': 'Metaux',
+        'name': 'Déchets métalliques',
         'bin' : 'Bleue',
         'background': '#1976D2',
         'color' : '#FFFFFF',
         'image': 'img/poubelle-bleu-2.png',
-        'description': 'Déchets métalliques',
-        'schedule_time': '13h - 15h'
+        'description': 'Déchets métalliques recyclables.',
+        'schedule_time': '10h - 14h'
     }
 };
 

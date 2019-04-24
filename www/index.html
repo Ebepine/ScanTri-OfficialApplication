@@ -187,15 +187,21 @@
             htmlTrash = generateTrashHTML(trash.trash);
           }
           else if(!trash.found) {
-            htmlTrash = '<p style="text-align: justify;"><em>Désolé, la fiche produit ne semble pas contenir d\'informations sur le packaging. Vous pouvez l\'améliorer en vous rendant sur openfoodfacts.org.</em></p>';
+            htmlTrash = '<div class="col-12"><p style="text-align: justify;"><em>Désolé, la fiche produit ne semble pas contenir d\'informations sur le packaging. Vous pouvez l\'améliorer en vous rendant sur openfoodfacts.org.</em></p></div>';
           }
 
           // Add content into .scan-infos-container
           $('.scan-infos-container').html(
-            '<h1 class="scan_title">' + data.product.product_name + '</h1>' +
-            '<img src="' + data.product.image_small_url + '" />' +
-            '<p>' + data.product.packaging_tags + '</p>' +
-            '<hr/>' + htmlTrash
+            '<div class="row">' +
+              '<div class="col-12"><h4 style="text-align:center">Informations produit</h4></div>' +
+              '<div class="col-12"><hr></div>' +
+              '<div class="col-5"><img src="'+ data.product.image_small_url + '" class="img-fluid"></div>' +
+              '<div class="col-7"><strong>' + data.product.product_name + '</strong></div>' +
+              '<div class="col-12"><hr></div>' +
+              '<div class="col-12"><h4 style="text-align:center">Consignes de tri</h4></div>' +
+              '<div class="col-12"><hr></div>' +
+              htmlTrash +
+            '</div>'
           );
 
           // Add value to the history
@@ -314,41 +320,7 @@
     }
 
     function generateTrashHTML(trash) {
-      // Créer une div.poubelle
-      var poubelle_container = document.createElement('div');
-      poubelle_container.classList.add('poubelle');
-
-      // Ajout d'un titre dans le conteneur
-      var poubelle_container_titre = document.createElement('h1');
-      poubelle_container_titre.classList.add('poubelle_titre');
-      poubelle_container_titre.innerHTML = trash.name;
-
-      // Ajout d'une image dans le conteneur
-      var poubelle_container_image = document.createElement('img');
-      poubelle_container_image.src = trash.image;
-
-      // Ajout d'une description
-      var poubelle_container_description = document.createElement('p');
-      poubelle_container_description.innerHTML = trash.description;
-
-      // Ajout du label d'horaire
-      var poubelle_container_label_horaire = document.createElement('strong');
-      poubelle_container_label_horaire.innerHTML = 'Horaires';
-
-      // Ajout des horaires
-      var poubelle_container_horaire = document.createElement('p');
-      poubelle_container_horaire.classList.add('poubelle_horaires');
-      poubelle_container_horaire.innerHTML = trash.schedule_time;
-
-      // Insertion des éléments dans notre conteneur
-      poubelle_container.appendChild(poubelle_container_titre);
-      poubelle_container.appendChild(poubelle_container_image);
-      poubelle_container.appendChild(poubelle_container_description);
-      poubelle_container.appendChild(poubelle_container_label_horaire);
-      poubelle_container.appendChild(poubelle_container_horaire);
-
-      // On renvoie le code HTML
-      return poubelle_container.outerHTML;
+      return '<div class="col-4"><img src="'+ trash.image + '" class="img-fluid"></div><div class="col-8"><strong>' + trash.name + '</strong><br><em>' + trash.description + '</em><br><strong>Horaires</strong><br>' + trash.schedule_time + '</div>';
     }
   </script>
   <!-- Javascript template -->
